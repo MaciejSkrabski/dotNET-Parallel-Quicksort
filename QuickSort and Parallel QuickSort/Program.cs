@@ -8,8 +8,9 @@ namespace QuickSort_and_Parallel_QuickSort
     {
         static void Main(string[] args)
         {
-            int j = 10000;
-            for (int k=0; k<=7; k++)
+            int j = 777;
+            Stopwatch sw = new Stopwatch();
+            for (int k=0; k<=4; k++)
             {
                 Console.WriteLine($"=======\n {j} elements");
                 int[] tab = new int[j];
@@ -18,44 +19,49 @@ namespace QuickSort_and_Parallel_QuickSort
                 for (int i = 0; i < j; i++)
                     tab[i] = rnd.Next(-10000000, 10000000);
 
-                int[] tab2 = new int[j];
-                int[] tab3 = new int[j];
-                Array.Copy(tab, 0, tab2, 0, j);
-                Array.Copy(tab, 0, tab3, 0, j);
-
-
-                Console.WriteLine("continue\n");
+                int[] seq = new int[j];
+                int[] par = new int[j];
+                int[] doublePS = new int[j];
+                int[] fR = new int[j];
+                Array.Copy(tab, 0, seq, 0, j);
+                Array.Copy(tab, 0, par, 0, j);
+                Array.Copy(tab, 0, doublePS, 0, j);
+                Array.Copy(tab, 0, fR, 0, j);
                 Array.Sort(tab);
-                Console.WriteLine("tab2 sorted? " + tab2.SequenceEqual(tab));
-                Console.WriteLine("Sequentally sorting the array. Please be patient.\n");
+                Console.WriteLine("Sorting the array. Please be patient.");
+                
                 // Porównanie złożoności czasowej
-
-                Stopwatch sw = new Stopwatch();
-                sw.Reset();
-                sw.Start();
-                QuickSort.SequentialSort(tab2, 0, j - 1);
-                sw.Stop();
-                TimeSpan seq = sw.Elapsed;
-                sw.Reset();
-                Console.WriteLine("Sequential Quicksort Time: " + seq);
-                Console.WriteLine("tab2 sorted? " + tab2.SequenceEqual(tab));
-
-                Console.WriteLine("tab3 sorted? " + tab3.SequenceEqual(tab));
-                Console.WriteLine("Paralelly sorting the array. Please be patient.\n");
+                
 
                 sw.Start();
-                QuickSort.ParallelSort(tab3, 0, j - 1);
+                QuickSort.SequentialSort(seq, 0, j - 1);
                 sw.Stop();
-                TimeSpan par = sw.Elapsed;
+                TimeSpan seqTime = sw.Elapsed;
                 sw.Reset();
-                Console.WriteLine("Parallel Quicksort Time: " + par);
-                Console.WriteLine("tab3 sorted? " + tab3.SequenceEqual(tab));
+                Console.WriteLine("Sequential Quicksort Time: " + seqTime);
 
+                sw.Start();
+                QuickSort.ParallelSort(par, 0, j - 1);
+                sw.Stop();
+                TimeSpan parTime = sw.Elapsed;
                 sw.Reset();
+                Console.WriteLine("Parallel Quicksort Time: " + parTime);
 
-                Console.WriteLine("\n\n\n" + (seq - par));
+                sw.Start();
+                QuickSort.DoublePS(doublePS, 0, j - 1);
+                sw.Stop();
+                TimeSpan doubleRPSTime = sw.Elapsed;
+                sw.Reset();
+                Console.WriteLine("RecPar Quicksort Time: " + doubleRPSTime);
 
-                j *= 5;
+                sw.Start();
+                QuickSort.FullRecursion(par, 0, j - 1);
+                sw.Stop();
+                TimeSpan fRTime = sw.Elapsed;
+                sw.Reset();
+                Console.WriteLine("fR Quicksort Time: " + fRTime);
+
+                j *= 7;
             }
             
 

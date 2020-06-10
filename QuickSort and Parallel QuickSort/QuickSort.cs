@@ -48,9 +48,31 @@ namespace QuickSort_and_Parallel_QuickSort
             var pivot = Partition(arr, left, right);
             /// Zrównoleglone sortowanie                 
             System.Threading.Tasks.Parallel.Invoke( 
-                () => ParallelSort(arr, left, pivot - 1), 
+                () => SequentialSort(arr, left, pivot - 1),
+                () => SequentialSort(arr, pivot + 1, right)
+            );
+        }
+        public static void DoublePS<T>(IList<T> arr, int left, int right) where T : IComparable<T>
+        {
+            if (right <= left) return;
+            /// Podział                 
+            var pivot = Partition(arr, left, right);
+            /// Zrównoleglone sortowanie                 
+            System.Threading.Tasks.Parallel.Invoke(
+                () => ParallelSort(arr, left, pivot - 1),
                 () => ParallelSort(arr, pivot + 1, right)
             );
-        }     
+        }
+        public static void FullRecursion<T>(IList<T> arr, int left, int right) where T : IComparable<T>
+        {
+            if (right <= left) return;
+            /// Podział                 
+            var pivot = Partition(arr, left, right);
+            /// Zrównoleglone sortowanie                 
+            System.Threading.Tasks.Parallel.Invoke(
+                () => FullRecursion(arr, left, pivot - 1),
+                () => FullRecursion(arr, pivot + 1, right)
+            );
+        }
     }
 }
